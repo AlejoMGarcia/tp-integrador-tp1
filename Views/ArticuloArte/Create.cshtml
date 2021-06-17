@@ -1,0 +1,75 @@
+﻿@model MVCBasico.Models.ArticuloArte
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>ArticuloArte</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Artista" class="control-label"></label>
+                <input asp-for="Artista" class="form-control" />
+                <span asp-validation-for="Artista" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Periodo" class="control-label"></label>
+                <input asp-for="Periodo" class="form-control" />
+                <span asp-validation-for="Periodo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoArte" class="control-label"></label>
+                <select asp-for="TipoArte" class="form-control" aspitems="Html.GetEnumSelectList<TipoArte>()">
+                    <option selected="selected" value="">Please select</option>
+                </select>
+                <span asp-validation-for="TipoArte" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrecioInicial" class="control-label"></label>
+                <input asp-for="PrecioInicial" class="form-control" />
+                <span asp-validation-for="PrecioInicial" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PrecioMinimo" class="control-label"></label>
+                <input asp-for="PrecioMinimo" class="form-control" />
+                <span asp-validation-for="PrecioMinimo" class="text-danger"></span>
+            </div>
+            <!--
+            <div class="form-group">
+                <label asp-for="Foto" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="Foto" class="custom-file-input" id="customFile">
+                    <label class="custom-file-label" for="customFile">Elige un archivo</label>
+                </div>
+                <span asp-validation-for="Foto" class="text-danger"></span>
+            </div>
+            -->
+            <div class="form-group">
+                <label asp-for="PrecioEnPuja" class="control-label"></label>
+                <input asp-for="PrecioEnPuja" class="form-control" />
+                <span asp-validation-for="PrecioEnPuja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
