@@ -1,9 +1,8 @@
-﻿using System;
+﻿using ButterfliesShop.Validators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MVCBasico.Models
 {
@@ -12,8 +11,11 @@ namespace MVCBasico.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        [UsuarioValidacion("^[a-zA-Z0-9]{6,10}$")]
         public string Nombre { get; set; }
         public string Apellido { get; set; }
+        [Required(ErrorMessage = "El apodo debe ser alfanumerico")]
+        [UsuarioValidacion("^[a-zA-Z0-9]{6,10}$")]
         public string Apodo { get; set; }
         public string Contraseña { get; set; }
         public string Email { get; set; }
