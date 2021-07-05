@@ -1,0 +1,43 @@
+﻿@model MVCBasico.Models.Subasta
+
+@{
+    ViewData["Title"] = "Desactivar";
+}
+
+<h1>Desactivar Subasta</h1>
+
+<h3>
+    ¿Esta seguro que quiere desactivar la subasta @Html.DisplayFor(model => model.Codigo)?
+</h3>
+<h4>
+    En caso de desactivarla, esta subasta podrá volver a ser activada desde el menú previo.
+</h4>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Codigo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Codigo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaFinalizacion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FechaFinalizacion)
+        </dd>
+    </dl>
+    
+    <form asp-action="Deactivate">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Desactivar" class="btn btn-danger" /> |
+        <a asp-action="Index">Volver al listado</a>
+    </form>
+</div>

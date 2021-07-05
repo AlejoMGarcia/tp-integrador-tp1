@@ -1,13 +1,12 @@
 ﻿@model MVCBasico.Models.ArticuloMueble
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle";
 }
 
-<h1>Details</h1>
+<h1>Detalle Artículo de Mueble - @Html.DisplayFor(model => model.Nombre)</h1>
 
 <div>
-    <h4>ArticuloMueble</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -64,7 +63,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PrecioMinimo)
         </dd>
- 
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.PrecioEnPuja)
         </dt>
@@ -74,6 +73,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+    <a asp-action="Index">Volver a la lista</a>
 </div>

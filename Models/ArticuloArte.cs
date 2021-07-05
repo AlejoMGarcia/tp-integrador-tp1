@@ -9,6 +9,7 @@ namespace MVCBasico.Models
     public class ArticuloArte : Articulo
     {
         public string Artista { get; set; }
+        [Display(Name = "Período")]
         public string Periodo { get; set; }
         [Display(Name = "Tipo de Arte")]
         public TipoArte TipoArte { get; set; }

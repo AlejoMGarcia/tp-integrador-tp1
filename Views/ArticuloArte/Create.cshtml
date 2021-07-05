@@ -1,12 +1,11 @@
 ﻿@model MVCBasico.Models.ArticuloArte
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Crear Artículo de Arte";
 }
 
-<h1>Create</h1>
+<h1>Nuevo Artículo de Arte</h1>
 
-<h4>ArticuloArte</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,8 +23,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="TipoArte" class="control-label"></label>
-                <select asp-for="TipoArte" class="form-control" aspitems="Html.GetEnumSelectList<TipoArte>()">
-                    <option selected="selected" value="">Please select</option>
+                <select asp-for="TipoArte" class="form-control" asp-items="Html.GetEnumSelectList<TipoArte>()">
+                    <option selected="selected" value="">Por favor seleccione el tipo de arte</option>
                 </select>
                 <span asp-validation-for="TipoArte" class="text-danger"></span>
             </div>
@@ -60,14 +59,14 @@
                 <span asp-validation-for="PrecioEnPuja" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver a la lista</a>
 </div>
 
 @section Scripts {
