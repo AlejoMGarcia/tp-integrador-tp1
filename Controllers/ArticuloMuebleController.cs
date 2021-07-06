@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCBasico.Context;
 using MVCBasico.Models;
@@ -13,10 +13,12 @@ namespace MVCBasico.Controllers
     public class ArticuloMuebleController : Controller
     {
         private readonly SubastaDatabaseContext _context;
+        private IHostingEnvironment _environment;
 
-        public ArticuloMuebleController(SubastaDatabaseContext context)
+        public ArticuloMuebleController(SubastaDatabaseContext context, IHostingEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: ArticuloMueble
@@ -54,13 +56,24 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Alto,Ancho,Material,Peso,Tipo,Fabricante,Id,Nombre,PrecioInicial,PrecioMinimo,PrecioEnPuja")] ArticuloMueble articuloMueble)
+        public async Task<IActionResult> Create([Bind("Alto,Ancho,Material,Peso,Tipo,Fabricante,Id,Nombre,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloMueble articuloMueble)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(articuloMueble);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                articuloMueble.FechaCreacion = DateTime.Today;
+                if (articuloMueble.ArchivoFoto != null && articuloMueble.ArchivoFoto.Length > 0)
+                {
+                    articuloMueble.TipoImagen = articuloMueble.ArchivoFoto.ContentType;
+                    articuloMueble.NombreImagen = Path.GetFileName(articuloMueble.ArchivoFoto.FileName);
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        articuloMueble.ArchivoFoto.CopyTo(memoryStream);
+                        articuloMueble.ArchivoImagen = memoryStream.ToArray();
+                    }
+                    _context.Add(articuloMueble);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(articuloMueble);
         }
@@ -86,7 +99,7 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Alto,Ancho,Material,Peso,Tipo,Fabricante,Id,Nombre,PrecioInicial,PrecioMinimo,PrecioEnPuja")] ArticuloMueble articuloMueble)
+        public async Task<IActionResult> Edit(int id, [Bind("Alto,Ancho,Material,Peso,Tipo,Fabricante,Id,Nombre,UsuarioCreador,FechaCreacion,FechaModificacion,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloMueble articuloMueble)
         {
             if (id != articuloMueble.Id)
             {
@@ -97,6 +110,17 @@ namespace MVCBasico.Controllers
             {
                 try
                 {
+                    articuloMueble.FechaModificacion = DateTime.Today;
+                    if (articuloMueble.ArchivoFoto != null && articuloMueble.ArchivoFoto.Length > 0)
+                    {
+                        articuloMueble.TipoImagen = articuloMueble.ArchivoFoto.ContentType;
+                        articuloMueble.NombreImagen = Path.GetFileName(articuloMueble.ArchivoFoto.FileName);
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            articuloMueble.ArchivoFoto.CopyTo(memoryStream);
+                            articuloMueble.ArchivoImagen = memoryStream.ToArray();
+                        }
+                    }
                     _context.Update(articuloMueble);
                     await _context.SaveChangesAsync();
                 }
@@ -148,6 +172,42 @@ namespace MVCBasico.Controllers
         private bool ArticuloMuebleExists(int id)
         {
             return _context.ArticulosMueble.Any(e => e.Id == id);
+        }
+
+        public IActionResult GetImage(int id)
+        {
+            var articulo = _context.ArticulosArte.Find(id);
+            if (articulo != null)
+            {
+                string webRootpath = _environment.WebRootPath;
+                string folderPath = "\\images\\";
+                string fullPath = webRootpath + folderPath + articulo.NombreImagen;
+                if (System.IO.File.Exists(fullPath))
+                {
+                    FileStream fileOnDisk = new FileStream(fullPath, FileMode.Open);
+                    byte[] fileBytes;
+                    using (BinaryReader br = new BinaryReader(fileOnDisk))
+                    {
+                        fileBytes = br.ReadBytes((int)fileOnDisk.Length);
+                    }
+                    return File(fileBytes, articulo.TipoImagen);
+                }
+                else
+                {
+                    if (articulo.ArchivoImagen.Length > 0)
+                    {
+                        return File(articulo.ArchivoImagen, articulo.TipoImagen);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

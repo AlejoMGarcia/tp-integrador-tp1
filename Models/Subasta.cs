@@ -16,11 +16,15 @@ namespace MVCBasico.Models
         //[RegularExpression(@"^[a-zA-Z''-'\s]", ErrorMessage = "El código solo acepta caracteres alfabeticos.")]
         public string Codigo { get; set; }
 
+        [DataType(DataType.DateTime)]
         [Display(Name = "Fecha de Inicio")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yy}")]
         [Required(ErrorMessage = "La fecha de inicio no puede estar vacia.")]
         public DateTime FechaInicio{ get; set; }
 
+        [DataType(DataType.DateTime)]
         [Display(Name = "Fecha de Finalización")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yy}")]
         [Required(ErrorMessage = "La fecha de finalización no puede estar vacia.")]
         public DateTime FechaFinalizacion { get; set; }
 
@@ -30,8 +34,8 @@ namespace MVCBasico.Models
         public Subasta()
         {
             this.Activa = true;
-            this.FechaInicio = DateTime.Now;
-            this.FechaFinalizacion = DateTime.Now;
+            this.FechaInicio = DateTime.Today;
+            this.FechaFinalizacion = DateTime.Today;
         }
 
     }

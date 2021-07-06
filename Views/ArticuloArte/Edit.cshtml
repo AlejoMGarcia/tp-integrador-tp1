@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Artista" class="control-label"></label>
@@ -23,7 +23,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="TipoArte" class="control-label"></label>
-                <select asp-for="TipoArte" class="form-control"></select>
+                <select asp-for="TipoArte" class="form-control" asp-items="Html.GetEnumSelectList<TipoArte>()">
+                    <option selected="selected" value="">Por favor seleccione el tipo de arte</option>
+                </select>
                 <span asp-validation-for="TipoArte" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
@@ -32,6 +34,11 @@
                 <input asp-for="Nombre" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
+
+            <input type="hidden" asp-for="UsuarioCreador" />
+            <input type="hidden" asp-for="FechaCreacion" />
+            <input type="hidden" asp-for="FechaModificacion" />
+
             <div class="form-group">
                 <label asp-for="PrecioInicial" class="control-label"></label>
                 <input asp-for="PrecioInicial" class="form-control" />
@@ -42,17 +49,24 @@
                 <input asp-for="PrecioMinimo" class="form-control" />
                 <span asp-validation-for="PrecioMinimo" class="text-danger"></span>
             </div>
-            <!--
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-            </div>
-            -->
             <div class="form-group">
                 <label asp-for="PrecioEnPuja" class="control-label"></label>
                 <input asp-for="PrecioEnPuja" class="form-control" />
                 <span asp-validation-for="PrecioEnPuja" class="text-danger"></span>
+            </div>
+            @if (@Model.NombreImagen != null)
+            {
+            <div class="form-group">
+                <label class="control-label">Imagen: @Model.NombreImagen </label>
+                <dd class="photo-display">
+                    <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloArte", new { Id = @Model.Id })" />
+                </dd>
+            </div>
+            }
+            <div class="form-group">
+                <label asp-for="ArchivoFoto">Modificar imagen</label>
+                <input asp-for="ArchivoFoto" type="file" />
+                <span asp-validation-for="ArchivoFoto"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />

@@ -4,14 +4,16 @@ using MVCBasico.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MVCBasico.Migrations
 {
     [DbContext(typeof(SubastaDatabaseContext))]
-    partial class SubastaDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210706005433_MVCBasico.Context.SubastaDatabaseContext_AgregadoImagenProducto")]
+    partial class MVCBasicoContextSubastaDatabaseContext_AgregadoImagenProducto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

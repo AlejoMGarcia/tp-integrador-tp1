@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,11 @@ namespace MVCBasico.Controllers
     public class ArticuloArteController : Controller
     {
         private readonly SubastaDatabaseContext _context;
-
-        public ArticuloArteController(SubastaDatabaseContext context)
+        private IHostingEnvironment _environment;
+        public ArticuloArteController(SubastaDatabaseContext context, IHostingEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: ArticuloArte
@@ -54,13 +57,25 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Artista,Periodo,TipoArte,Id,Nombre,PrecioInicial,PrecioMinimo,PrecioEnPuja")] ArticuloArte articuloArte)
+        public async Task<IActionResult> Create([Bind("Artista,Periodo,TipoArte,Id,Nombre,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloArte articuloArte)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(articuloArte);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //articuloArte.usuarioCreador = ;
+                articuloArte.FechaCreacion = DateTime.Today;
+                if (articuloArte.ArchivoFoto != null && articuloArte.ArchivoFoto.Length > 0)
+                {
+                    articuloArte.TipoImagen = articuloArte.ArchivoFoto.ContentType;
+                    articuloArte.NombreImagen = Path.GetFileName(articuloArte.ArchivoFoto.FileName);
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        articuloArte.ArchivoFoto.CopyTo(memoryStream);
+                        articuloArte.ArchivoImagen = memoryStream.ToArray();
+                    }
+                    _context.Add(articuloArte);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(articuloArte);
         }
@@ -86,7 +101,7 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Artista,Periodo,TipoArte,Id,Nombre,PrecioInicial,PrecioMinimo,PrecioEnPuja")] ArticuloArte articuloArte)
+        public async Task<IActionResult> Edit(int id, [Bind("Artista,Periodo,TipoArte,Id,Nombre,UsuarioCreador,FechaCreacion,FechaModificacion,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloArte articuloArte)
         {
             if (id != articuloArte.Id)
             {
@@ -97,6 +112,17 @@ namespace MVCBasico.Controllers
             {
                 try
                 {
+                    articuloArte.FechaModificacion = DateTime.Today;
+                    if (articuloArte.ArchivoFoto != null && articuloArte.ArchivoFoto.Length > 0)
+                    {
+                        articuloArte.TipoImagen = articuloArte.ArchivoFoto.ContentType;
+                        articuloArte.NombreImagen = Path.GetFileName(articuloArte.ArchivoFoto.FileName);
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            articuloArte.ArchivoFoto.CopyTo(memoryStream);
+                            articuloArte.ArchivoImagen = memoryStream.ToArray();
+                        }
+                    }
                     _context.Update(articuloArte);
                     await _context.SaveChangesAsync();
                 }
@@ -148,6 +174,42 @@ namespace MVCBasico.Controllers
         private bool ArticuloArteExists(int id)
         {
             return _context.ArticulosArte.Any(e => e.Id == id);
+        }
+
+        public IActionResult GetImage(int id)
+        {
+            var articulo = _context.ArticulosArte.Find(id);
+            if (articulo != null)
+            {
+                string webRootpath = _environment.WebRootPath;
+                string folderPath = "\\images\\";
+                string fullPath = webRootpath + folderPath + articulo.NombreImagen;
+                if (System.IO.File.Exists(fullPath))
+                {
+                    FileStream fileOnDisk = new FileStream(fullPath, FileMode.Open);
+                    byte[] fileBytes;
+                    using (BinaryReader br = new BinaryReader(fileOnDisk))
+                    {
+                        fileBytes = br.ReadBytes((int)fileOnDisk.Length);
+                    }
+                    return File(fileBytes, articulo.TipoImagen);
+                }
+                else
+                {
+                    if (articulo.ArchivoImagen.Length > 0)
+                    {
+                        return File(articulo.ArchivoImagen, articulo.TipoImagen);
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

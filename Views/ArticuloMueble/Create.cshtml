@@ -56,17 +56,15 @@
                 <input asp-for="PrecioMinimo" class="form-control" />
                 <span asp-validation-for="PrecioMinimo" class="text-danger"></span>
             </div>
-            <!--
-            <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
-            </div>
-            -->
             <div class="form-group">
                 <label asp-for="PrecioEnPuja" class="control-label"></label>
                 <input asp-for="PrecioEnPuja" class="form-control" />
                 <span asp-validation-for="PrecioEnPuja" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArchivoFoto"></label>
+                <input asp-for="ArchivoFoto" type="file" />
+                <span asp-validation-for="ArchivoFoto"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Crear" class="btn btn-primary" />

@@ -51,6 +51,15 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PrecioEnPuja)
         </dd>
+        @if (@Model.NombreImagen != null)
+        {
+            <dt class="col-sm-2">
+                Image Artículo:  @Html.DisplayFor(model => model.NombreImagen)
+            </dt>
+            <dd class="photo-display">
+                <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloArte", new { Id = @Model.Id })" />
+            </dd>
+        }
     </dl>
 </div>
 <div>

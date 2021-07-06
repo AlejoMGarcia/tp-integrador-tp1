@@ -182,5 +182,39 @@ namespace MVCBasico.Controllers
         {
             return _context.Subastas.Any(e => e.Id == id);
         }
+
+
+
+
+
+
+        // GET: Subasta/AddedProduct/5
+        public async Task<IActionResult> AddedProduct(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var subasta = await _context.Subastas.FirstOrDefaultAsync(m => m.Id == id);
+            if (subasta == null)
+            {
+                return NotFound();
+            }
+
+            return View(subasta);
+        }
+
+        // POST: Subasta/AddedProduct/5
+        [HttpPost, ActionName("AddedProduct")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddedProductConfirmed(List<int> productsId)
+        {
+            var subasta = await _context.Subastas.FindAsync();
+            subasta.Activa = false;
+            _context.Update(subasta);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
