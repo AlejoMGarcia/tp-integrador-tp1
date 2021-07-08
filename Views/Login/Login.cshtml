@@ -1,47 +1,42 @@
 ﻿@model Usuario
 
 @{
-    ViewBag.Title = "Login";
-    Layout = null;
+    ViewBag.Title = "Ingresa";
+    ViewData["Container"] = "disabled";
+    ViewData["Title"] = "disabled";
+
 }
-
-@using (Html.BeginForm("Login", "Login", FormMethod.Post))
-{
-    <fieldset>
-        <legend>Login</legend>
-
-        @Html.AntiForgeryToken()
-        @Html.ValidationSummary(true)
-        @if (@ViewBag.Message != null)
-        {
-            <div style="border: 1px solid red">
-                @ViewBag.Message
+<div style="height: 88vh;
+        background-image: url(/images/background.jpg);  
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-repeat: no-repeat;
+        background-color: #00000030;
+        background-blend-mode: overlay;">
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-6 m-auto bg-white p-5 rounded">
+                <form id="account" method="post" asp-action="Login">
+                    <h4>Ingresa al sitio</h4>
+                    <hr />
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Apodo"></label>
+                        <input asp-for="Apodo" class="form-control" />
+                        <span asp-validation-for="Apodo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Contraseña"></label>
+                        <input type="password" asp-for="Contraseña" class="form-control" />
+                        <span asp-validation-for="Contraseña" class="text-danger"></span>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-secondary" style="padding: 1rem 2rem;">Ingresar</button>
+                    </div>
+                </form>
+                <hr />
+                <p class="text-muted margin-top-1">Si no tienes cuenta <a class="text-dark" asp-controller="Account" asp-action="Register">Reg&iacute;strate</a></p>
             </div>
-        }
-        <table>
-            <tr>
-                <td>@Html.LabelFor(a => a.Apodo)</td>
-                <td>@Html.TextBoxFor(a => a.Apodo)</td>
-                <td>@Html.ValidationMessageFor(a => a.Apodo)</td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.LabelFor(a => a.Contraseña)
-                </td>
-                <td>
-                    @Html.PasswordFor(a => a.Contraseña)
-                </td>
-                <td>
-                    @Html.ValidationMessageFor(a => a.Contraseña)
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="submit" value="Login" />
-                </td>
-                <td></td>
-            </tr>
-        </table>
-    </fieldset>
-} 
+        </div>
+    </div>
+</div>
