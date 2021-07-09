@@ -57,7 +57,7 @@ namespace MVCBasico.Controllers
             {
                 _context.Add(usuario);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login", "Login");
             }
             return View(usuario);
         }

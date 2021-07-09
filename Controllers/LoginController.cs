@@ -2,9 +2,6 @@
 using Microsoft.Extensions.Logging;
 using MVCBasico.Context;
 using MVCBasico.Models;
-using System;
-using System.Linq;
-using System.Text;
 
 namespace MVCBasico.Controllers
 {
@@ -51,15 +48,6 @@ namespace MVCBasico.Controllers
             }
             return View(usuarioLogueado);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOu2t()
-        {
-            //HttpContext.Session.Set("UserName", null);
-            return RedirectToAction("Login", "Login");
-        }
-
 
         public IActionResult LogOut()
         {

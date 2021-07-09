@@ -1,10 +1,9 @@
 ﻿@model Usuario
 
 @{
-    ViewBag.Title = "Ingresa";
+    ViewBag.Title = "Login";
     ViewData["Container"] = "disabled";
-    ViewData["Title"] = "disabled";
-
+    
 }
 <div style="height: 88vh;
         background-image: url(/images/background.jpg);  
@@ -35,7 +34,7 @@
                     </div>
                 </form>
                 <hr />
-                <p class="text-muted margin-top-1">Si no tienes cuenta <a class="text-dark" asp-controller="Account" asp-action="Register">Reg&iacute;strate</a></p>
+                <p class="text-muted margin-top-1">Si no tienes cuenta <a class="text-dark" asp-controller="Usuario" asp-action="Create">Reg&iacute;strate</a></p>
             </div>
         </div>
     </div>
