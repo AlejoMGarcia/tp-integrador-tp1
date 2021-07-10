@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MVCBasico.Context;
 using MVCBasico.Models;
+using System.Threading.Tasks;
 
 namespace MVCBasico.Controllers
 {
@@ -24,29 +26,24 @@ namespace MVCBasico.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(Usuario usuarioLogueado)
+        public async Task<ActionResult> Login(UsuarioLoginVM usuarioLogueado)
         {
-            //if (ModelState.IsValid)
-            {
-                //using (_context)
-                {
-                    //var obj = _context.Usuarios.Where(a => a.Apodo.Equals(usuarioLogueado.Apodo) && a.Contraseña.Equals(usuarioLogueado.Contraseña)).FirstOrDefault();
-                    //if (obj != null)
-                    if(true)
-                    {
-                        //HttpContext.Session.Set("UserID", BitConverter.GetBytes(obj.Id));
-                        //HttpContext.Session.Set("UserName", Encoding.ASCII.GetBytes(obj.Apodo));
+            var usuario = await _context.Usuarios
+                .SingleOrDefaultAsync(u => u.Apodo == usuarioLogueado.Apodo 
+                && u.Contraseña == usuarioLogueado.Contraseña);
 
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Invalid User Name or Password");
-                        return View(usuarioLogueado);
-                    }
-                }
+            if (usuario != null)
+            {
+                //HttpContext.Session.Set("UserID", BitConverter.GetBytes(obj.Id));
+                //HttpContext.Session.Set("UserName", Encoding.ASCII.GetBytes(obj.Apodo));
+
+                return RedirectToAction("Index", "Home");
             }
-            return View(usuarioLogueado);
+            else
+            {
+                ViewBag.ErrorLogin = "Usuario o contraseña ingresado invalido.";
+                return View(usuarioLogueado);
+            }
         }
 
         public IActionResult LogOut()
