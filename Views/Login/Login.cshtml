@@ -5,43 +5,56 @@
     ViewData["Container"] = "disabled";
 
 }
-    <div style="height: 88vh;
+<div style="height: 88vh;
         background-image: url(/images/background.jpg);
         background-size: cover;
         background-repeat: no-repeat;
         background-repeat: no-repeat;
         background-color: #00000030;
         background-blend-mode: overlay;">
-        <div class="container h-100">
-            <div class="row h-100">
-                <div class="col-6 m-auto bg-white p-5 rounded">
-                    <form id="account" method="post" asp-action="Login">
-                        <h4>Ingresa al sitio</h4>
-                        <hr />
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        <div class="form-group">
-                            <label asp-for="Apodo"></label>
-                            <input asp-for="Apodo" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Contraseña"></label>
-                            <input type="password" asp-for="Contraseña" class="form-control" />
-                        </div>
-                        @if (ViewBag.ErrorLogin != null)
-                        {
-                            <div class="form-group">
-                                <label class="control-label">Error:</label>
-                                @ViewBag.ErrorLogin
-                                <span class="text-danger"></span>
-                            </div>
-                        }
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-secondary" style="padding: 1rem 2rem;">Ingresar</button>
-                        </div>
-                    </form>
+    <div class="container h-100">
+        <div class="row h-100">
+            <div class="col-6 m-auto bg-white p-5 rounded">
+                <form id="account" method="post" asp-action="Login">
+                    <h4>Ingresa al sitio</h4>
                     <hr />
-                    <p class="text-muted margin-top-1">Si no tienes cuenta <a class="text-dark" asp-controller="Usuario" asp-action="Create">Reg&iacute;strate</a></p>
-                </div>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Apodo"></label>
+                        <input asp-for="Apodo" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Contraseña"></label>
+                        <input type="password" asp-for="Contraseña" class="form-control" />
+                    </div>
+                    @if (ViewBag.ErrorLogin != null)
+                    {
+                    <dialog id="erroLogin" open="true">
+                        <p>@ViewBag.ErrorLogin</p>
+                        <menu>
+                            <button id="aceptar" class="btn btn-secondary" type="reset">Aceptar</button>
+                        </menu>
+                    </dialog>
+                    }
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-secondary" style="padding: 1rem 2rem;">Ingresar</button>
+                    </div>
+                </form>
+                <hr />
+                <p class="text-muted margin-top-1">Si no tienes cuenta <a class="text-dark" asp-controller="Usuario" asp-action="Create">Reg&iacute;strate</a></p>
             </div>
         </div>
     </div>
+</div>
+
+<script>
+  (function() {
+    var cancelButton = document.getElementById('aceptar');
+    var favDialog = document.getElementById('erroLogin');
+
+    cancelButton.addEventListener('click', function() {
+      favDialog.close();
+    });
+
+  })();
+</script>

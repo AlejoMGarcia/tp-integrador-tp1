@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MVCBasico.Context;
 using MVCBasico.Models;
+using MVCBasico.Utils;
+using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MVCBasico.Controllers
@@ -34,9 +38,10 @@ namespace MVCBasico.Controllers
 
             if (usuario != null)
             {
-                //HttpContext.Session.Set("UserID", BitConverter.GetBytes(obj.Id));
-                //HttpContext.Session.Set("UserName", Encoding.ASCII.GetBytes(obj.Apodo));
-
+                if (HttpContext.Session.Get<Usuario>("_LoginUser") == default)
+                {
+                    HttpContext.Session.Set<Usuario>("_LoginUser", usuario);
+                }
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -48,6 +53,10 @@ namespace MVCBasico.Controllers
 
         public IActionResult LogOut()
         {
+            if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
+            {
+                HttpContext.Session.Remove("_LoginUser");
+            }
             return View("Login");
         }
     }

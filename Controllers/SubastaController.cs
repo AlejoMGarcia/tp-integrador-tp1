@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCBasico.Context;
 using MVCBasico.Models;
+using MVCBasico.Utils;
 
 namespace MVCBasico.Controllers
 {
@@ -22,7 +24,16 @@ namespace MVCBasico.Controllers
         // GET: Subasta
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Subastas.ToListAsync());
+            if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
+            {
+                var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+                return View(await _context.Subastas
+                            .Where(e => e.UsuarioId == loginUser.Id).ToListAsync());
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // GET: Subasta/Details/5
@@ -59,10 +70,16 @@ namespace MVCBasico.Controllers
         {
             if (ModelState.IsValid)
             {
-                subasta.Activa = true;
-                _context.Add(subasta);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
+                {
+                    var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+
+                    subasta.UsuarioId = loginUser.Id;
+                    subasta.Activa = true;
+                    _context.Add(subasta);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(subasta);
         }
@@ -88,7 +105,7 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Codigo,FechaInicio,FechaFinalizacion,Activo")] Subasta subasta)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Codigo,FechaInicio,FechaFinalizacion,Activo,UsuarioId")] Subasta subasta)
         {
             if (id != subasta.Id)
             {

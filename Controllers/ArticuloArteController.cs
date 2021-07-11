@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCBasico.Context;
 using MVCBasico.Models;
+using MVCBasico.Utils;
 
 namespace MVCBasico.Controllers
 {
@@ -16,6 +18,8 @@ namespace MVCBasico.Controllers
     {
         private readonly SubastaDatabaseContext _context;
         private IHostingEnvironment _environment;
+        private byte[] usuario;
+
         public ArticuloArteController(SubastaDatabaseContext context, IHostingEnvironment environment)
         {
             _context = context;
@@ -25,7 +29,16 @@ namespace MVCBasico.Controllers
         // GET: ArticuloArte
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ArticulosArte.ToListAsync());
+            if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
+            {
+                var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+                return View(await _context.ArticulosArte
+                            .Where(e => e.UsuarioCreadorId == loginUser.Id).ToListAsync());
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // GET: ArticuloArte/Details/5
@@ -61,20 +74,25 @@ namespace MVCBasico.Controllers
         {
             if (ModelState.IsValid)
             {
-                //articuloArte.usuarioCreador = ;
-                articuloArte.FechaCreacion = DateTime.Today;
-                if (articuloArte.ArchivoFoto != null && articuloArte.ArchivoFoto.Length > 0)
+                if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
                 {
-                    articuloArte.TipoImagen = articuloArte.ArchivoFoto.ContentType;
-                    articuloArte.NombreImagen = Path.GetFileName(articuloArte.ArchivoFoto.FileName);
-                    using (var memoryStream = new MemoryStream())
+                    var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+                
+                    articuloArte.UsuarioCreadorId = loginUser.Id;
+                    articuloArte.FechaCreacion = DateTime.Today;
+                    if (articuloArte.ArchivoFoto != null && articuloArte.ArchivoFoto.Length > 0)
                     {
-                        articuloArte.ArchivoFoto.CopyTo(memoryStream);
-                        articuloArte.ArchivoImagen = memoryStream.ToArray();
+                        articuloArte.TipoImagen = articuloArte.ArchivoFoto.ContentType;
+                        articuloArte.NombreImagen = Path.GetFileName(articuloArte.ArchivoFoto.FileName);
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            articuloArte.ArchivoFoto.CopyTo(memoryStream);
+                            articuloArte.ArchivoImagen = memoryStream.ToArray();
+                        }
+                        _context.Add(articuloArte);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
                     }
-                    _context.Add(articuloArte);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(articuloArte);
@@ -101,7 +119,7 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Artista,Periodo,TipoArte,Id,Nombre,UsuarioCreador,FechaCreacion,FechaModificacion,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloArte articuloArte)
+        public async Task<IActionResult> Edit(int id, [Bind("Artista,Periodo,TipoArte,Id,Nombre,UsuarioCreadorId,FechaCreacion,FechaModificacion,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloArte articuloArte)
         {
             if (id != articuloArte.Id)
             {

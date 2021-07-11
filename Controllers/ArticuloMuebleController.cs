@@ -3,10 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVCBasico.Context;
 using MVCBasico.Models;
+using MVCBasico.Utils;
 
 namespace MVCBasico.Controllers
 {
@@ -24,7 +26,16 @@ namespace MVCBasico.Controllers
         // GET: ArticuloMueble
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ArticulosMueble.ToListAsync());
+            if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
+            {
+                var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+                return View(await _context.ArticulosMueble
+                            .Where(e => e.UsuarioCreadorId == loginUser.Id).ToListAsync());
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // GET: ArticuloMueble/Details/5
@@ -60,19 +71,25 @@ namespace MVCBasico.Controllers
         {
             if (ModelState.IsValid)
             {
-                articuloMueble.FechaCreacion = DateTime.Today;
-                if (articuloMueble.ArchivoFoto != null && articuloMueble.ArchivoFoto.Length > 0)
+                if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
                 {
-                    articuloMueble.TipoImagen = articuloMueble.ArchivoFoto.ContentType;
-                    articuloMueble.NombreImagen = Path.GetFileName(articuloMueble.ArchivoFoto.FileName);
-                    using (var memoryStream = new MemoryStream())
+                    var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+
+                    articuloMueble.UsuarioCreadorId = loginUser.Id;
+                    articuloMueble.FechaCreacion = DateTime.Today;
+                    if (articuloMueble.ArchivoFoto != null && articuloMueble.ArchivoFoto.Length > 0)
                     {
-                        articuloMueble.ArchivoFoto.CopyTo(memoryStream);
-                        articuloMueble.ArchivoImagen = memoryStream.ToArray();
+                        articuloMueble.TipoImagen = articuloMueble.ArchivoFoto.ContentType;
+                        articuloMueble.NombreImagen = Path.GetFileName(articuloMueble.ArchivoFoto.FileName);
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            articuloMueble.ArchivoFoto.CopyTo(memoryStream);
+                            articuloMueble.ArchivoImagen = memoryStream.ToArray();
+                        }
+                        _context.Add(articuloMueble);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
                     }
-                    _context.Add(articuloMueble);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(articuloMueble);
@@ -99,7 +116,7 @@ namespace MVCBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Alto,Ancho,Material,Peso,Tipo,Fabricante,Id,Nombre,UsuarioCreador,FechaCreacion,FechaModificacion,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloMueble articuloMueble)
+        public async Task<IActionResult> Edit(int id, [Bind("Alto,Ancho,Material,Peso,Tipo,Fabricante,Id,Nombre,UsuarioCreadorId,FechaCreacion,FechaModificacion,PrecioInicial,PrecioMinimo,PrecioEnPuja,ArchivoFoto")] ArticuloMueble articuloMueble)
         {
             if (id != articuloMueble.Id)
             {
@@ -176,7 +193,7 @@ namespace MVCBasico.Controllers
 
         public IActionResult GetImage(int id)
         {
-            var articulo = _context.ArticulosArte.Find(id);
+            var articulo = _context.ArticulosMueble.Find(id);
             if (articulo != null)
             {
                 string webRootpath = _environment.WebRootPath;

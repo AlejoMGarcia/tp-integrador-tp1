@@ -29,6 +29,8 @@ namespace MVCBasico.Models
         public DateTime FechaFinalizacion { get; set; }
 
         public bool Activa { get; set; }
+
+        public int? UsuarioId { get; set; }
         public List<Articulo> ArticulosSubastados { get; set; }
 
         public Subasta()

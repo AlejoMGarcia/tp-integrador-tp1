@@ -15,7 +15,7 @@ namespace MVCBasico.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
 
-        public Usuario UsuarioCreador { get; set; }
+        public int? UsuarioCreadorId { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yy}")]
