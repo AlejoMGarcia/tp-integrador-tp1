@@ -7,7 +7,7 @@
 <h1>Subastas</h1>
 
 <p>
-    <a asp-action="Create">Crear nueva</a>
+    <a class="btn btn-secondary" asp-action="Create">Crear nueva</a>
 </p>
 <table class="table">
     <thead>
@@ -44,16 +44,16 @@
                     @Html.DisplayFor(modelItem => item.Activa)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Detalle</a> |
+                    <a class="btn-tabla-action" asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a class="btn-tabla-action" asp-action="Details" asp-route-id="@item.Id">Detalle</a> |
 
                     @if (item.Activa)
                     {
-                        <a asp-action="Deactivate" asp-route-id="@item.Id">Desactivar</a>
+                        <a class="btn-tabla-action" asp-action="Deactivate" asp-route-id="@item.Id">Desactivar</a>
                     }
                     else
                     {
-                        <a asp-action="Activate" asp-route-id="@item.Id">Activar</a>
+                        <a class="btn-tabla-action" asp-action="Activate" asp-route-id="@item.Id">Activar</a>
                     }
 
                 </td>

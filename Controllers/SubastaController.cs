@@ -201,10 +201,6 @@ namespace MVCBasico.Controllers
         }
 
 
-
-
-
-
         // GET: Subasta/AddedProduct/5
         public async Task<IActionResult> AddedProduct(int? id)
         {
@@ -219,12 +215,11 @@ namespace MVCBasico.Controllers
                 return NotFound();
             }
 
-            return View(subasta);
+            return View();
         }
 
         // POST: Subasta/AddedProduct/5
         [HttpPost, ActionName("AddedProduct")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddedProductConfirmed(List<int> productsId)
         {
             var subasta = await _context.Subastas.FindAsync();

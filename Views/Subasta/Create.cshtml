@@ -27,14 +27,11 @@
                 <span asp-validation-for="FechaFinalizacion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-primary" /> |
+                <a class="btn btn-secondary" asp-action="Index">Volver al listado</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Volver al listado</a>
 </div>
 
 @section Scripts {
