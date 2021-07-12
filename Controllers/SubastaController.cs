@@ -271,14 +271,11 @@ namespace MVCBasico.Controllers
             return listaProductos;
         }
 
-        // GET: Subasta/AddedProductConfirm/5/Arte/5
-        [HttpGet, ActionName("AddedProductConfirm")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddedProductConfirm(int? subastaId, string? tipoArticulo, int? articuloId)
         {
             Articulo articulo = null;
 
-            if (TipoArticulo.Mueble.Equals(tipoArticulo)){
+            if (TipoArticulo.Mueble.ToString().Equals(tipoArticulo)){
                 articulo = await _context.ArticulosMueble
                         .Where(e => e.Id == articuloId).SingleOrDefaultAsync();
             }
@@ -293,7 +290,7 @@ namespace MVCBasico.Controllers
                 articulo.SubastaId = subastaId;
                 _context.Update(articulo);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("AddedProduct", subastaId);
+                return RedirectToAction("AddedProduct", new { id = subastaId });
             }
             else
             {
@@ -302,15 +299,11 @@ namespace MVCBasico.Controllers
 
             return BadRequest();
         }
-
-        // GET: Subasta/DeletedProductConfirm/5/Arte/5
-        [HttpGet, ActionName("DeletedProductConfirm")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletedProductConfirm(int? subastaId, string? tipoArticulo, int? articuloId)
         {
             Articulo articulo = null;
 
-            if (TipoArticulo.Mueble.Equals(tipoArticulo))
+            if (TipoArticulo.Mueble.ToString().Equals(tipoArticulo))
             {
                 articulo = await _context.ArticulosMueble
                         .Where(e => e.Id        == articuloId && 
@@ -330,7 +323,7 @@ namespace MVCBasico.Controllers
                 articulo.SubastaId = null;
                 _context.Update(articulo);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("AddedProduct", subastaId);
+                return RedirectToAction("AddedProduct", new { id = subastaId });
             }
             else
             {
