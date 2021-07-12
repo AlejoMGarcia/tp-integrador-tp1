@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVCBasico.Context;
 using MVCBasico.Models;
@@ -202,31 +200,144 @@ namespace MVCBasico.Controllers
 
 
         // GET: Subasta/AddedProduct/5
-        public async Task<IActionResult> AddedProduct(int? id)
+        public async Task<IActionResult> AddedProduct(int? Id)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
 
-            var subasta = await _context.Subastas.FirstOrDefaultAsync(m => m.Id == id);
+            var subasta = await _context.Subastas.FirstOrDefaultAsync(m => m.Id == Id);
             if (subasta == null)
             {
                 return NotFound();
             }
 
-            return View();
+            if (HttpContext.Session.Get<Usuario>("_LoginUser") != default)
+            {
+                var loginUser = HttpContext.Session.Get<Usuario>("_LoginUser");
+                List<ProductoSubastaVM> listaProductosSubasta = await BuildListaProductSubastaVM(loginUser.Id, subasta);
+
+                return View(listaProductosSubasta);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
-        // POST: Subasta/AddedProduct/5
-        [HttpPost, ActionName("AddedProduct")]
-        public async Task<IActionResult> AddedProductConfirmed(List<int> productsId)
+        private async Task<List<ProductoSubastaVM>> BuildListaProductSubastaVM(int usuarioId, Subasta subasta)
         {
-            var subasta = await _context.Subastas.FindAsync();
-            subasta.Activa = false;
-            _context.Update(subasta);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            List<ProductoSubastaVM> listaProductos = new List<ProductoSubastaVM>();
+
+            var articulosArte = await _context.ArticulosArte
+                            .Where(e => e.UsuarioCreadorId == usuarioId
+                            && (e.SubastaId == null || e.SubastaId == subasta.Id))
+                            .ToListAsync();
+
+            foreach(ArticuloArte arte in articulosArte){
+                var arteSubastaVM = new ProductoSubastaVM();
+                arteSubastaVM.SubastaId = subasta.Id;
+                arteSubastaVM.ArticuloId = arte.Id;
+                arteSubastaVM.Nombre = arte.Nombre;
+                arteSubastaVM.PrecioInicial = arte.PrecioInicial;
+                arteSubastaVM.FechaCreacion = arte.FechaCreacion;
+                arteSubastaVM.Included = (arte.SubastaId != null);
+                arteSubastaVM.TipoArticulo = TipoArticulo.Arte;
+                arteSubastaVM.NombreImagen = arte.NombreImagen;
+                listaProductos.Add(arteSubastaVM);
+            }
+
+            var articulosMueble = await _context.ArticulosMueble
+                        .Where(e => e.UsuarioCreadorId == usuarioId
+                        && (e.SubastaId == null || e.SubastaId == subasta.Id))
+                        .ToListAsync();
+
+            foreach (ArticuloMueble mueble in articulosMueble)
+            {
+                var muebleSubastaVM = new ProductoSubastaVM();
+                muebleSubastaVM.SubastaId = subasta.Id;
+                muebleSubastaVM.ArticuloId = mueble.Id;
+                muebleSubastaVM.Nombre = mueble.Nombre;
+                muebleSubastaVM.PrecioInicial = mueble.PrecioInicial;
+                muebleSubastaVM.FechaCreacion = mueble.FechaCreacion;
+                muebleSubastaVM.Included = (mueble.SubastaId != null);
+                muebleSubastaVM.TipoArticulo = TipoArticulo.Mueble;
+                muebleSubastaVM.NombreImagen = mueble.NombreImagen;
+
+                listaProductos.Add(muebleSubastaVM);
+            }
+
+            return listaProductos;
+        }
+
+        // GET: Subasta/AddedProductConfirm/5/Arte/5
+        [HttpGet, ActionName("AddedProductConfirm")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddedProductConfirm(int? subastaId, string? tipoArticulo, int? articuloId)
+        {
+            Articulo articulo = null;
+
+            if (TipoArticulo.Mueble.Equals(tipoArticulo)){
+                articulo = await _context.ArticulosMueble
+                        .Where(e => e.Id == articuloId).SingleOrDefaultAsync();
+            }
+            else
+            {
+                articulo = await _context.ArticulosArte
+                        .Where(e => e.Id == articuloId).SingleOrDefaultAsync();
+            }
+
+            if (articulo != null)
+            {
+                articulo.SubastaId = subastaId;
+                _context.Update(articulo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("AddedProduct", subastaId);
+            }
+            else
+            {
+                NotFound();
+            }
+
+            return BadRequest();
+        }
+
+        // GET: Subasta/DeletedProductConfirm/5/Arte/5
+        [HttpGet, ActionName("DeletedProductConfirm")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeletedProductConfirm(int? subastaId, string? tipoArticulo, int? articuloId)
+        {
+            Articulo articulo = null;
+
+            if (TipoArticulo.Mueble.Equals(tipoArticulo))
+            {
+                articulo = await _context.ArticulosMueble
+                        .Where(e => e.Id        == articuloId && 
+                                    e.SubastaId == subastaId)
+                        .SingleOrDefaultAsync();
+            }
+            else
+            {
+                articulo = await _context.ArticulosArte
+                        .Where(e => e.Id        == articuloId 
+                                 && e.SubastaId == subastaId)
+                        .SingleOrDefaultAsync();
+            }
+
+            if (articulo != null)
+            {
+                articulo.SubastaId = null;
+                _context.Update(articulo);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("AddedProduct", subastaId);
+            }
+            else
+            {
+                NotFound();
+            }
+
+            return BadRequest();
         }
     }
 }

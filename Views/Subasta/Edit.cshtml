@@ -29,11 +29,14 @@
             </div>
             <input type="hidden" asp-for="UsuarioId" />
             <div class="form-group">
+                <a asp-action="AddedProduct" asp-route-id="@Model.Id">
+                    <input type="button" value="Agregar productos" class="btn btn-secondary" />
+                </a>
+            </div>
+            <br />
+            <div class="form-group">
                 <div>
                     <input type="submit" value="Guardar" class="btn btn-secondary" />
-                    <a asp-controller="Subasta" asp-action="AddedProduct" asp-route-id="@Model.Id">
-                        <input type="button" value="Agregar productos" class="btn btn-secondary" />
-                    </a>
                     <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
                 </div>
             </div>

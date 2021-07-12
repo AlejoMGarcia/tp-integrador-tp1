@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MVCBasico.Models
 {
@@ -42,5 +39,7 @@ namespace MVCBasico.Models
         public string NombreImagen { get; set; }
         public byte[] ArchivoImagen { get; set; }
         public string TipoImagen { get; set; }
+
+        public int? SubastaId { get; set; }
     }
 }
