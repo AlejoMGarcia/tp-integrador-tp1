@@ -18,7 +18,6 @@ namespace MVCBasico.Controllers
     {
         private readonly SubastaDatabaseContext _context;
         private IHostingEnvironment _environment;
-        private byte[] usuario;
 
         public ArticuloArteController(SubastaDatabaseContext context, IHostingEnvironment environment)
         {

@@ -22,7 +22,6 @@ namespace MVCBasico.Controllers
             _context = context;
         }
 
-
         public ActionResult Login()
         {
             return View();

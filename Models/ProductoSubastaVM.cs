@@ -13,5 +13,6 @@ namespace MVCBasico.Models
         public TipoArticulo TipoArticulo { get; set; }
         public String Nombre { get; set; }
         public string NombreImagen { get; set; }
+        public double PrecioEnPuja { get; set; }
     }
 }

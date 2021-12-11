@@ -1,0 +1,98 @@
+﻿@model IEnumerable<MVCBasico.Models.ProductoSubastaVM>
+
+@{
+    ViewData["Title"] = "Productos de la Subasta";
+}
+
+
+<h1>
+    Productos de la Subasta
+</h1>
+
+<hr />
+
+
+@foreach (var item in Model)
+{
+
+    <div class="left clearfix ">
+        <div class="grid-card app-element ">
+            <!-- card data / details -->
+            <div class="item-thumb">
+                @if (item.NombreImagen != null)
+                {
+                    @if (TipoArticulo.Arte.Equals(item.TipoArticulo))
+                    {
+                        <div class="thumb-image">
+                            <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloArte", new { Id = item.ArticuloId })" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="thumb-image">
+                            <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloMueble", new { Id = item.ArticuloId })" />
+                        </div>
+                    }
+                }
+            </div>
+            <div class="item-name truncate">
+                <div title=""></div> <span class="truncate" title="@item.Nombre"> @item.Nombre </span>
+            </div>
+
+            <div class="item-screens truncate "><span class="">Precio Inicial</span> <span class=""> $ @item.PrecioInicial</span></div>
+
+
+            <div class="item-type-icons ">
+                <span class="label truncate">
+                    Tipo de Artículo:
+                </span>
+                <span class="value truncate" title="@item.TipoArticulo">@item.TipoArticulo</span>
+            </div>
+
+
+            <div class="item-data-values">
+                <div class="data-item">
+                    <span class="label truncate">Fecha Creación</span>
+                    <span class="value truncate" title="@item.FechaCreacion">@item.FechaCreacion</span>
+                </div>
+                <div class="data-item">
+                    <span class="label truncate">Incluido</span>
+                    @if (@item.Included)
+                    {
+                        <span class="value truncate" title="Si">Si</span>
+                    }
+                    else
+                    {
+                        <span class="value truncate" title="No">No</span>
+                    }
+                </div>
+
+                <br />
+
+                <div class="data-item">
+                    @if (@item.Included)
+                    {
+                        <a asp-action="DeletedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
+                            <input type="submit" value="Quitar Producto" class="btn btn-secondary" />
+                        </a>
+                        <a asp-action="AddedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
+                            <input type="button" style="opacity:0.5" disabled value="Agregar Producto" class="btn btn-secondary" />
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-action="DeletedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
+                            <input type="button" style="opacity:0.5" disabled value="Quitar Producto" class="btn btn-secondary" />
+                        </a>
+
+                        <a asp-action="AddedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
+                            <input type="button" value="Agregar Producto" class="btn btn-secondary" />
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+}
