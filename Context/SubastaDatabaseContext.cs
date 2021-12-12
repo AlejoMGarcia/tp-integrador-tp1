@@ -12,7 +12,8 @@ namespace MVCBasico.Context
         public DbSet<Telefono> Telefonos { get; set;}
         public DbSet<ArticuloMueble> ArticulosMueble { get; set; }
         public DbSet<ArticuloArte> ArticulosArte { get; set; }
-
         public DbSet<Subasta> Subastas { get; set; }
+        public DbSet<PujaProducto> PujasProducto { get; set; }
+
     }
 }

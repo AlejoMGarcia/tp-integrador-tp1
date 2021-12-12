@@ -30,6 +30,7 @@ namespace MVCBasico.Models
 
         public bool Activa { get; set; }
 
+        [ForeignKey("Usuario")]
         public int? UsuarioId { get; set; }
         public List<Articulo> ArticulosSubastados { get; set; }
 

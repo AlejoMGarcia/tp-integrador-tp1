@@ -53,10 +53,10 @@ namespace MVCBasico.Controllers
                 ingresoSubastaVM.FechaInicio = subasta.FechaInicio;
                 ingresoSubastaVM.FechaFinalizacion = subasta.FechaFinalizacion;
                 ingresoSubastaVM.UsuarioId = usuarioId;
-                
-                /* 
-                 cantidadArticulosArte = _context.ArticulosArte
-                .Where(a => a.SubastaId == subasta.Id).Count();
+                ingresoSubastaVM.SubastaId = subasta.Id;
+
+                int cantidadArticulosArte = await _context.ArticulosArte
+                .Where(a => a.SubastaId == subasta.Id).CountAsync();
 
                 int cantidadArticulosMueble = await _context.ArticulosMueble
                 .Where(a => a.SubastaId == subasta.Id).CountAsync();
@@ -64,7 +64,7 @@ namespace MVCBasico.Controllers
                 ingresoSubastaVM.CantidadProductosArte = cantidadArticulosArte;
                 ingresoSubastaVM.CantidadProductosMueble = cantidadArticulosMueble;
                 ingresoSubastaVM.CantidadProductos = cantidadArticulosMueble + cantidadArticulosArte;
-                */
+                
                 listaIngresoSubasta.Add(ingresoSubastaVM);
             }
 

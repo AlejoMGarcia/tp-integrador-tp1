@@ -4,14 +4,16 @@ using MVCBasico.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MVCBasico.Migrations
 {
     [DbContext(typeof(SubastaDatabaseContext))]
-    partial class SubastaDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211211233343_MVCBasico.Context.SubastaDatabaseContext_AgregadoPujaProducto")]
+    partial class MVCBasicoContextSubastaDatabaseContext_AgregadoPujaProducto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,8 +68,6 @@ namespace MVCBasico.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SubastaId");
-
-                    b.HasIndex("UsuarioCreadorId");
 
                     b.ToTable("Articulo");
 
@@ -286,9 +286,6 @@ namespace MVCBasico.Migrations
                     b.HasOne("MVCBasico.Models.Subasta", null)
                         .WithMany("ArticulosSubastados")
                         .HasForeignKey("SubastaId");
-                    b.HasOne("MVCBasico.Models.Usuario", "UsuarioCreador")
-                        .WithMany()
-                        .HasForeignKey("UsuarioCreadorId");
                 });
 
             modelBuilder.Entity("MVCBasico.Models.Compra", b =>

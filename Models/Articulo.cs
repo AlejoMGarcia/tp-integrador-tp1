@@ -12,6 +12,7 @@ namespace MVCBasico.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
 
+        [ForeignKey("Usuario")]
         public int? UsuarioCreadorId { get; set; }
 
         [DataType(DataType.DateTime)]
