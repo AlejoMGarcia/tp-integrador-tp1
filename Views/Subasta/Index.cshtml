@@ -9,6 +9,7 @@
 <p>
     <a class="btn btn-secondary" asp-action="Create">Crear nueva</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -30,7 +31,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr class="table-secondary">
                 <td>
                     @Html.DisplayFor(modelItem => item.Codigo)
                 </td>

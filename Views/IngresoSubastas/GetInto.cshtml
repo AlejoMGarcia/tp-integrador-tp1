@@ -11,88 +11,179 @@
 
 <hr />
 
+<div style="display: flex;">
+    @foreach (var item in Model)
+    {
 
-@foreach (var item in Model)
-{
-
-    <div class="left clearfix ">
-        <div class="grid-card app-element ">
-            <!-- card data / details -->
-            <div class="item-thumb">
-                @if (item.NombreImagen != null)
+        <div class="card ml-3" style="width: 18rem;">
+            @if (item.NombreImagen != null)
+            {
+                @if (TipoArticulo.Arte.Equals(item.TipoArticulo))
                 {
-                    @if (TipoArticulo.Arte.Equals(item.TipoArticulo))
-                    {
-                        <div class="thumb-image">
-                            <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloArte", new { Id = item.ArticuloId })" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="thumb-image">
-                            <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloMueble", new { Id = item.ArticuloId })" />
-                        </div>
-                    }
+                    <img src="@Url.Action("GetImage", "ArticuloArte", new { Id = item.ArticuloId })" class="card-img-top" alt="...">
                 }
-            </div>
-            <div class="item-name truncate">
-                <div title=""></div> <span class="truncate" title="@item.Nombre"> @item.Nombre </span>
-            </div>
+                else
+                {
+                    <img src="@Url.Action("GetImage", "ArticuloMueble", new { Id = item.ArticuloId })" class="card-img-top" alt="...">
+                }
+            }
+            <div class="card-body">
+                <h4 class="card-title" style=" text-align: -webkit-center;">@item.Nombre</h4>
+                <p class="card-text">
+                    <span style=" font-weight: bolder;">Tipo de Artículo: </span> @item.TipoArticulo
+                </p>
+                @if (TipoArticulo.Arte.Equals(item.TipoArticulo))
+                {
+                    <p class="card-text">
+                        <span style=" font-weight: bolder;">Artista: </span> @item.Artista
+                    </p>
+                    <p class="card-text">
+                        <span style=" font-weight: bolder;">Periodo: </span> @item.Periodo
+                    </p>
+                    <p class="card-text">
+                        <span style=" font-weight: bolder;">Tipo de Arte: </span> @Enum.ToObject(typeof(TipoArte), item.TipoArte)
+                    </p>
+                }
+                else
+                {
+                    <p class="card-text">
+                        <span style=" font-weight: bolder;">Tipo: </span> @item.Tipo
+                    </p>
+                    <p class="card-text">
+                        <span style=" font-weight: bolder;">Fabricante: </span> @item.Fabricante
+                    </p>
+                    <p class="card-text">
+                        <span style=" font-weight: bolder;">Dim. y Peso: </span> @item.Alto X @item.Ancho / @item.Peso kg
+                    </p>
+                }
+                <p class="card-text">
+                    <span style=" font-weight: bolder;">Precio Inicial: </span>$ @item.PrecioInicial
+                </p>
+                <p class="card-text">
+                    <span style=" font-weight: bolder;">Precio Mínimo: </span>$ @item.PrecioMinimo
+                </p>
+                <p class="card-text">
+                    <span style=" font-weight: bolder;">Precio en Puja Actual: </span>$ @item.PrecioEnPuja
+                </p>
 
-            <div class="item-screens truncate "><span class="">Precio Inicial</span> <span class=""> $ @item.PrecioInicial</span></div>
-
-
-            <div class="item-type-icons ">
-                <span class="label truncate">
-                    Tipo de Artículo:
-                </span>
-                <span class="value truncate" title="@item.TipoArticulo">@item.TipoArticulo</span>
-            </div>
-
-
-            <div class="item-data-values">
-                <div class="data-item">
-                    <span class="label truncate">Fecha Creación</span>
-                    <span class="value truncate" title="@item.FechaCreacion">@item.FechaCreacion</span>
+                <div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pushModal"
+                            data-nombre="@item.Nombre"
+                            data-saldo="@item.Saldo"
+                            data-precio="@item.PrecioEnPuja"
+                            data-subastaid="@item.SubastaId"
+                            data-articuloid="@item.ArticuloId">
+                        Realizar Puja
+                    </button>
                 </div>
-                <div class="data-item">
-                    <span class="label truncate">Incluido</span>
-                    @if (@item.Included)
-                    {
-                        <span class="value truncate" title="Si">Si</span>
-                    }
-                    else
-                    {
-                        <span class="value truncate" title="No">No</span>
-                    }
-                </div>
 
-                <br />
+            </div>
+        </div>
 
-                <div class="data-item">
-                    @if (@item.Included)
-                    {
-                        <a asp-action="DeletedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="submit" value="Quitar Producto" class="btn btn-secondary" />
-                        </a>
-                        <a asp-action="AddedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="button" style="opacity:0.5" disabled value="Agregar Producto" class="btn btn-secondary" />
-                        </a>
-                    }
-                    else
-                    {
-                        <a asp-action="DeletedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="button" style="opacity:0.5" disabled value="Quitar Producto" class="btn btn-secondary" />
-                        </a>
-
-                        <a asp-action="AddedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="button" value="Agregar Producto" class="btn btn-secondary" />
-                        </a>
-                    }
+        <div class="modal fade" id="pushModal" tabindex="-1" aria-labelledby="pushModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="pushModalLabel">Realizar puja en producto</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="display: none">
+                        <div class="form-group">
+                            <input type="number" class="input-sm" id="subastaId" name="subastaId" value="@item.SubastaId" />
+                        </div>
+                    </div>
+                    <div class="modal-body" style="display: none">
+                        <div class="form-group">
+                            <input type="number" class="input-sm" id="articuloId" name="articuloId" value="@item.ArticuloId" />
+                        </div>
+                    </div>
+                    <div class="modal-body" style="display: none">
+                        <div class="form-group">
+                            <input type="number" class="input-sm" id="saldo" name="saldo" value="@item.Saldo" />
+                        </div>
+                    </div>
+                    <div class="modal-body" style="display: none">
+                        <div class="form-group">
+                            <input type="number" class="input-sm" id="precioPujaActual" name="precioPujaActual" value="@item.PrecioEnPuja" />
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="precio-actual" id="precioActual">Precio en puja actual: </h5>
+                    </div>
+                    <div class="modal-body">
+                        <h5 class="saldo" id="saldo">Saldo disponible para realizar puja: </h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Agregar puja: $</label>
+                            <input type="number" class="input-sm" id="precioPuja" name="precioPuja" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary" onclick="pushPriceProduct(this)" data-dismiss="modal">Realizar Puja</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+</div>
 
-    <hr />
-}
+<div class="alert alert-danger alert-dismissible fade" role="alert">
+    <span id="alert-message" class="alert-message"></span>
+    <button type="button" class="close" onclick="hidenAlert()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel">Resultado de la operación</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: xx-large;">
+                Puja realizada exitosamente.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <a class="btn btn-secondary" asp-action="Index">Volver a las subastas</a>
+</div>
+
+<script>
+
+    function pushPriceProduct(modal) {
+        var subastaId = document.getElementById("subastaId").value;
+        var articuloId = document.getElementById("articuloId").value;
+        var precioPujaActual = document.getElementById("precioPujaActual").value;
+        var precioPuja = document.getElementById("precioPuja").value;
+        var saldo = document.getElementById("saldo").value;
+
+        if (Number(saldo) < Number(precioPujaActual)) {
+            showAlert("No tiene saldo suficiente para realizar esta puja.")
+            return
+        }
+
+        if (Number(precioPuja) <= Number(precioPujaActual)) {
+            showAlert("La puja ingresada no puede ser menor o igual al precio en puja actual.")
+            return
+        }
+
+        doPushPrice(subastaId, articuloId, precioPuja)
+
+    }
+
+</script>

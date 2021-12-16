@@ -72,12 +72,16 @@ namespace MVCBasico
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "subastaProduct",
+                    name: "subastaAddProduct",
                     pattern: "{controller=Subasta}/{action=AddedProductConfirm}/{subastaId}/{tipoArticulo}/{articuloId}");
 
                 endpoints.MapControllerRoute(
-                    name: "subastaProduct",
+                    name: "subastaDeleteProduct",
                     pattern: "{controller=Subasta}/{action=DeletedProductConfirm}/{subastaId}/{tipoArticulo}/{articuloId}");
+
+                endpoints.MapControllerRoute(
+                    name: "pushPrice",
+                    pattern: "{controller=IngresoSubastas}/{action=PushPriceProduct}/{subastaId}/{articuloId}/{precioPuja}");
 
                 endpoints.MapControllerRoute(
                     name: "default",

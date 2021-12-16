@@ -11,52 +11,35 @@
 
 <hr />
 
+<div style="display: flex;">
+    @foreach (var item in Model)
+    {
 
-@foreach (var item in Model)
-{
-
-    <div class="left clearfix ">
-        <div class="grid-card app-element ">
-            <!-- card data / details -->
-            <div class="item-thumb">
-                @if (item.NombreImagen != null)
+        <div class="card ml-3" style="width: 18rem;">
+            @if (item.NombreImagen != null)
+            {
+                @if (TipoArticulo.Arte.Equals(item.TipoArticulo))
                 {
-                    @if (TipoArticulo.Arte.Equals(item.TipoArticulo))
-                    {
-                        <div class="thumb-image">
-                            <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloArte", new { Id = item.ArticuloId })" />
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="thumb-image">
-                            <img class="photo-display-img" src="@Url.Action("GetImage", "ArticuloMueble", new { Id = item.ArticuloId })" />
-                        </div>
-                    }
+                    <img src="@Url.Action("GetImage", "ArticuloArte", new { Id = item.ArticuloId })" class="card-img-top" alt="...">
                 }
-            </div>
-            <div class="item-name truncate">
-                <div title=""></div> <span class="truncate" title="@item.Nombre"> @item.Nombre </span>
-            </div>
-
-            <div class="item-screens truncate "><span class="">Precio Inicial</span> <span class=""> $ @item.PrecioInicial</span></div>
-
-
-            <div class="item-type-icons ">
-                <span class="label truncate">
-                    Tipo de Artículo:
-                </span>
-                <span class="value truncate" title="@item.TipoArticulo">@item.TipoArticulo</span>
-            </div>
-
-
-            <div class="item-data-values">
-                <div class="data-item">
-                    <span class="label truncate">Fecha Creación</span>
-                    <span class="value truncate" title="@item.FechaCreacion">@item.FechaCreacion</span>
-                </div>
-                <div class="data-item">
-                    <span class="label truncate">Incluido</span>
+                else
+                {
+                    <img src="@Url.Action("GetImage", "ArticuloMueble", new { Id = item.ArticuloId })" class="card-img-top" alt="...">
+                }
+            }
+            <div class="card-body">
+                <h5 class="card-title">@item.Nombre</h5>
+                <p class="card-text">
+                    <span class="">Precio Inicial: </span>$ @item.PrecioInicial
+                </p>
+                <p class="card-text">
+                    <span class="">Tipo de Artículo: </span> @item.TipoArticulo
+                </p>
+                <p class="card-text">
+                    <span class="">Fecha Creación: </span> @item.FechaCreacion
+                </p>
+                <p class="card-text">
+                    <span class="">Incluido: </span>
                     @if (@item.Included)
                     {
                         <span class="value truncate" title="Si">Si</span>
@@ -65,41 +48,37 @@
                     {
                         <span class="value truncate" title="No">No</span>
                     }
-                </div>
-
-                <br />
-
-                <div class="data-item">
+                </p>
+                <div>
                     @if (@item.Included)
                     {
                         <a asp-action="DeletedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="submit" value="Quitar Producto" class="btn btn-secondary" />
+                            <input type="submit" value="Quitar" class="btn btn-secondary" />
                         </a>
                         <a asp-action="AddedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="button" style="opacity:0.5" disabled value="Agregar Producto" class="btn btn-secondary" />
+                            <input type="button" style="opacity:0.5" disabled value="Agregar" class="btn btn-secondary" />
                         </a>
                     }
                     else
                     {
                         <a asp-action="DeletedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="button" style="opacity:0.5" disabled value="Quitar Producto" class="btn btn-secondary" />
+                            <input type="button" style="opacity:0.5" disabled value="Quitar" class="btn btn-secondary" />
                         </a>
 
                         <a asp-action="AddedProductConfirm" asp-route-subastaId="@item.SubastaId" asp-route-tipoArticulo="@item.TipoArticulo" asp-route-articuloId="@item.ArticuloId">
-                            <input type="button" value="Agregar Producto" class="btn btn-secondary" />
+                            <input type="button" value="Agregar" class="btn btn-secondary" />
                         </a>
                     }
                 </div>
             </div>
         </div>
-    </div>
 
-    <hr />
-}
+    }
+</div>
 
-<div class="form-group">
-    <div>
-        <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
-    </div>
+<hr />
+
+<div>
+    <a class="btn btn-secondary" asp-action="Index">Volver a la lista</a>
 </div>
 

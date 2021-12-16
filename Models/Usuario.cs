@@ -57,5 +57,10 @@ namespace MVCBasico.Models
 
         public List<Compra> Compras { get; set; }
         public List<Subasta> Subastas { get; set; }
+
+        public Usuario()
+        {
+            this.Estado = EstadoUsuario.Registrado;
+        }
     }
 }

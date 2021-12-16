@@ -11,48 +11,74 @@
 
 <hr />
 
+<div style="display: flex;">
 
-@foreach (var item in Model)
-{
+    @foreach (var item in Model)
+    {
 
-    <div class="left clearfix ">
-        <div class="grid-card app-element ">
-            <!-- card data / details -->
-
-            <div class="item-name truncate">
-                <div title=""></div> <span class="truncate" title="@item.Codigo"> @item.Codigo </span>
+        <div class="card ml-3" style="width: 18rem;">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel" style="border: groove;">
+                <div class="carousel-inner">
+                    @{
+                        var activeDiv = "active";
+                        @foreach (var articulo in item.articulos)
+                        {
+                            <div class="carousel-item @activeDiv">
+                                <div>
+                                    <img src="@Url.Action("GetImage", "IngresoSubastas", new { Id = @articulo.Id })" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="d-none d-md-block" style="color: black; text-align: -webkit-center;">
+                                    <h5>@articulo.Nombre</h5>
+                                    <p>Precio puja: $@articulo.PrecioEnPuja</p>
+                                </div>
+                            </div>
+                            activeDiv = "";
+                        }
+                    }
+                </div>
+                <ol class="carousel-indicators" style="position: inherit;">
+                    @{var activeDivli = "active";}
+                    @for (var i = 0; i < item.articulos.Count(); i++)
+                    {
+                        <li data-target="#carouselExampleCaptions" data-slide-to="@i" class="@activeDivli" style="background-color: lightslategray"></li>
+                        activeDivli = "";
+                    }
+                </ol>
+                <button class="carousel-control-prev" style=" background-color: gray; opacity: 35%; border-width: inherit; " type="button" data-target="#carouselExampleCaptions" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previo</span>
+                </button>
+                <button class="carousel-control-next" style="background-color: gray; opacity: 35%; border-width: inherit;" type="button" data-target="#carouselExampleCaptions" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Siguiente</span>
+                </button>
             </div>
-
-
-            <div class="item-data-values">
-                <div class="data-item">
-                    <span class="label truncate">Fecha Inicio</span>
-                    <span class="value truncate" title="@item.FechaInicio">@item.FechaInicio</span>
-                </div>
-                <div class="data-item">
-                    <span class="label truncate">Fecha Finalización</span>
-                    <span class="value truncate" title="@item.FechaFinalizacion">@item.FechaFinalizacion</span>
-                </div>
-                <div class="data-item">
-                    <span class="label truncate">Productos de Arte:</span>
-                    <span class="value truncate" title="@item.CantidadProductosArte">@item.CantidadProductosArte</span>
-                    |
-                    <span class="label truncate">Productos Mueble:</span>
-                    <span class="value truncate" title="@item.CantidadProductosMueble">@item.CantidadProductosMueble</span>
-                </div>
-                <div class="data-item">
-                    <span class="label truncate">Cantidad de Productos</span>
-                    <span class="value truncate" title="@item.CantidadProductos">@item.CantidadProductos</span>
-                </div>
-
-                <br />
-
+        <div class="card-body">
+            <h5 class="card-title">@item.Codigo</h5>
+            <p class="card-text">
+                <span class="">Fecha de Inicio: </span> @item.FechaInicio
+            </p>
+            <p class="card-text">
+                <span class="">Tipo de Finalización: </span> @item.FechaFinalizacion
+            </p>
+            <p class="card-text">
+                <span class="label truncate">Prod. de Arte:</span>
+                <span class="value truncate" title="@item.CantidadProductosArte">@item.CantidadProductosArte</span>
+                |
+                <span class="label truncate">Prod. Mueble:</span>
+                <span class="value truncate" title="@item.CantidadProductosMueble">@item.CantidadProductosMueble</span>
+            </p>
+            <p class="card-text">
+                <span class="">Cantidad de Productos: </span> @item.CantidadProductos
+            </p>
+            <div style="text-align-last: center;">
                 <a asp-action="GetInto" asp-route-subastaId="@item.SubastaId">
                     <input type="button" value="Ingresar a Subasta" class="btn btn-secondary" />
                 </a>
             </div>
         </div>
-    </div>
+        </div>
+    }
 
-    <hr />
-}
+</div>
+<hr />

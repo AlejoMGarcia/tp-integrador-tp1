@@ -13,7 +13,8 @@ namespace MVCBasico.Models
 
         [Display(Name = "Código")]
         [Required(ErrorMessage = "El código de la subasta no puede estar vacío.")]
-        //[RegularExpression(@"^[a-zA-Z''-'\s]", ErrorMessage = "El código solo acepta caracteres alfabeticos.")]
+        //Regex.IsMatch(input, @"^[a-zA-Z]+$");
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "El código solo acepta caracteres alfabeticos.")]
         public string Codigo { get; set; }
 
         [DataType(DataType.DateTime)]

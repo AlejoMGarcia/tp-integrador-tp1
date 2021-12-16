@@ -15,5 +15,10 @@ namespace MVCBasico.Models
 
         public double PrecioPuja { get; set; }
         public DateTime FechaPuja { get; set; }
+
+        public PujaProducto()
+        {
+            this.FechaPuja = DateTime.Now;
+        }
     }
 }
