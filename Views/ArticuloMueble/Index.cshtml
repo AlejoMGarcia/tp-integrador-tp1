@@ -74,14 +74,14 @@
                         @Html.DisplayFor(modelItem => item.Nombre)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PrecioInicial)
+                        $ @Html.DisplayFor(modelItem => item.PrecioInicial)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.PrecioMinimo)
+                        $ @Html.DisplayFor(modelItem => item.PrecioMinimo)
                     </td>
 
                     <td>
-                        @Html.DisplayFor(modelItem => item.PrecioEnPuja)
+                        $ @Html.DisplayFor(modelItem => item.PrecioEnPuja)
                     </td>
                     <td>
                         <a asp-action="Edit" class="btn-tabla-action" asp-route-id="@item.Id">Editar</a> |
